@@ -1,5 +1,10 @@
 var id = 0;
 var tasks = [];
+
+
+var handler = require('../tasks.js');
+console.log(handler.list);
+
 module.exports = async function (context, req) {
     context.log('Adding a task to the planner');
 
@@ -18,7 +23,7 @@ module.exports = async function (context, req) {
             body: responseMessage
         };
     } else {
-        tasks.push(task)
+        handler.push(task);
         const responseMessage = { response: task };
 
         context.res = {
@@ -26,6 +31,5 @@ module.exports = async function (context, req) {
             body: responseMessage
         };
     }
-    console.log(tasks);
 
 }
