@@ -14,6 +14,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import Tooltip from '@material-ui/core/Tooltip';
 import TaskFilter from './TaskFilter';
 import { format } from "date-fns";
+import { get } from '../requests/axiosRequests';
 
 class Tasks extends React.Component {
 
@@ -21,8 +22,8 @@ class Tasks extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            drawerOpen: false, filterOpen: false, filterData: {
-                date: {value: new Date(), custom: false}, custom: false, responsible: "", state: ""
+            tasks: [], drawerOpen: false, filterOpen: false, filterData: {
+                date: { value: new Date(), custom: false }, custom: false, responsible: "", state: ""
             }
         };
         this.toggleDrawer = this.toggleDrawer.bind(this);
@@ -37,17 +38,28 @@ class Tasks extends React.Component {
         this.clearAll = this.clearAll.bind(this);
     }
 
+
+    componentDidMount() {
+        get("get-tasks?code=QqUgbzr3SG5NYlwUGTbv8az9c933eclAia6viiJW24Poes7i7EQ8pg==").then(data => {
+            console.log("HELLO " + JSON.stringify(data));
+            this.setState({ tasks: data.response });
+
+        });
+    }
+
+    
+
     clearAll() {
         this.setState({
             filterData: {
-                date: {value: new Date(), custom: false}, custom: false, responsible: "", state: ""
+                date: { value: new Date(), custom: false }, custom: false, responsible: "", state: ""
             }
         });
     }
 
     handleFilterDataDateChange = (date) => {
         var filterData = { ...this.state.filterData }
-        filterData.date = {value: date, custom : true};
+        filterData.date = { value: date, custom: true };
         filterData.custom = true;
         this.setState({ filterData });
     }
@@ -101,19 +113,17 @@ class Tasks extends React.Component {
     render() {
         console.log(this.props.tasks)
         console.log(this.state.filterData)
-        const taskList = this.props.tasks.filter(task => 
-            !this.state.filterData.custom  ||
-             (
-                 (this.state.filterData.responsible === "" || task.responsible.name.includes(this.state.filterData.responsible))
-                  && (this.state.filterData.state === "" || task.status === this.state.filterData.state)
-                  && (!this.state.filterData.date.custom || format(task.dueDate, "dd/MM/yyyy") === format(this.state.filterData.date.value, "dd/MM/yyyy"))
+        const taskList = this.state.tasks.filter(task =>
+            !this.state.filterData.custom ||
+            (
+                (this.state.filterData.responsible === "" || task.responsible.name.includes(this.state.filterData.responsible))
+                && (this.state.filterData.state === "" || task.status === this.state.filterData.state)
+                && (!this.state.filterData.date.custom || format(task.dueDate, "dd/MM/yyyy") === format(this.state.filterData.date.value, "dd/MM/yyyy"))
             )
-        
+
         )
             .map((task, i) => {
-                console.log(format(task.dueDate, "dd/MM/yyyy"))
-                console.log(format(this.state.filterData.date.value, "dd/MM/yyyy"))
-                
+
                 return (
                     <TaskCard key={i} task={task} />
                 );

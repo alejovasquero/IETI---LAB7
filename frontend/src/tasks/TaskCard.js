@@ -6,14 +6,13 @@ import Typography from '@material-ui/core/Typography';
 import CheckIcon from '@material-ui/icons/Check';
 import ErrorIcon from '@material-ui/icons/Error';
 import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
-
+import moment from 'moment';
 
 const styles = (theme) => ({
 
     root: {
         margin: "auto",
     }
-
 });
 
 class TaskCard extends React.Component {
@@ -52,7 +51,7 @@ class TaskCard extends React.Component {
                                         {this.props.task.responsible.name}
                                     </Typography>
                                     <Typography color="textSecondary" gutterBottom>
-                                        {this.props.task.dueDate.toLocaleDateString("en-US")}
+                                        {moment(new Date(this.props.task.dueDate)).format('DD-MM-YYYY')}
                                     </Typography>
                                 </CardContent>
                             </div>

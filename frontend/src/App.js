@@ -5,6 +5,9 @@ import Tasks from './tasks/Tasks.js'
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import TaskCreator from './tasks/TaskCreator.js';
 import UserProfile from './users/UserProfile';
+import { get, post } from './requests/axiosRequests';
+
+
 const LoginView = () => (
   <Login />
 );
@@ -16,15 +19,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      iisLoggedIn: false, tasks: [{
-        description: "test task",
-        responsible: {
-          name: "david",
-          email: "david@example.com"
-        },
-        status: "Ready",
-        dueDate: new Date()
-      }], user: {
+      iisLoggedIn: false, user: {
         name: "", email: "", password: ""
       }
     };
@@ -59,11 +54,8 @@ class App extends React.Component {
 
   addTask(task) {
     console.log(JSON.stringify(task))
-    this.setState(prevState => {
-      const tasks = prevState.tasks.concat(task);
-      return {
-        tasks
-      }
+    post("add-task?code=zlYt51626qsww79UEYTfIB0pMOU3AqgygKObOwKRIqyrm5kDEOVrSQ==", task).then(data => {
+      console.log(data.response)
     });
   }
 
@@ -86,6 +78,7 @@ class App extends React.Component {
     localStorage.setItem('password', config.password);
   }
 
+
   render() {
 
     const TasksCreator = () => (
@@ -96,7 +89,7 @@ class App extends React.Component {
     )
 
     const TasksView = () => (
-      <Tasks tasks={this.state.tasks} user={this.state.user} />
+      <Tasks user={this.state.user} />
     );
 
     const UserProfileComponent = () => (

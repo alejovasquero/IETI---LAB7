@@ -17,7 +17,6 @@ module.exports = async function (context, req) {
 
     if (!(task.description && task.responsible && task.status && task.dueDate)) {
         const responseMessage = { response: "Invalid task" };
-
         context.res = {
             status: 400,
             body: responseMessage
