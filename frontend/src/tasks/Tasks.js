@@ -118,7 +118,7 @@ class Tasks extends React.Component {
             (
                 (this.state.filterData.responsible === "" || task.responsible.name.includes(this.state.filterData.responsible))
                 && (this.state.filterData.state === "" || task.status === this.state.filterData.state)
-                && (!this.state.filterData.date.custom || format(task.dueDate, "dd/MM/yyyy") === format(this.state.filterData.date.value, "dd/MM/yyyy"))
+                && (!this.state.filterData.date.custom || format(new Date(task.dueDate), "dd/MM/yyyy") === format(this.state.filterData.date.value, "dd/MM/yyyy"))
             )
 
         )
